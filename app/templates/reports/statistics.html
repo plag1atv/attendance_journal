@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="page-header">
+            <h1>Статистика посещаемости</h1>
+        </div>
+
+        <div class="table-card" style="margin-bottom: 24px;">
+            <form method="GET" class="filter-form">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="group_id">Выберите группу</label>
+                        <select id="group_id" name="group_id">
+                            <option value="">Выберите группу</option>
+                            {% for group in groups %}
+                                <option
+                                    value="{{ group.id }}"
+                                    {% if selected_group and selected_group.id == group.id %}selected{% endif %}
+                                >
+                                    {{ group.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">
+                            Показать
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if selected_group %}
+            {% if statistics_data %}
+                <div class="table-card">
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Студент</th>
+                                    <th>Всего занятий</th>
+                                    <th>Присутствовал</th>
+                                    <th>Отсутствовал</th>
+                                    <th>Опоздал</th>
+                                    <th>Уважительная причина</th>
+                                    <th>Процент посещаемости</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in statistics_data %}
+                                    <tr>
+                                        <td>{{ item.student.full_name }}</td>
+                                        <td>{{ item.total }}</td>
+                                        <td>{{ item.present }}</td>
+                                        <td>{{ item.absent }}</td>
+                                        <td>{{ item.late }}</td>
+                                        <td>{{ item.excused }}</td>
+                                        <td>{{ item.attendance_percent }}%</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-card">
+                    <p>Для выбранной группы пока нет данных по посещаемости.</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-card">
+                <p>Сначала выбери группу, чтобы посмотреть статистику.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

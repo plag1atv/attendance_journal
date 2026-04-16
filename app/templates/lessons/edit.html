@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать занятие{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1>Редактирование занятия</h1>
+
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="lesson_date">Дата</label>
+                    <input
+                        type="date"
+                        id="lesson_date"
+                        name="lesson_date"
+                        value="{{ lesson.lesson_date }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Предмет</label>
+                    <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        value="{{ lesson.subject }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="lesson_number">Пара</label>
+                    <input
+                        type="text"
+                        id="lesson_number"
+                        name="lesson_number"
+                        value="{{ lesson.lesson_number }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="teacher_id">Преподаватель</label>
+                    <select id="teacher_id" name="teacher_id" required>
+                        {% for teacher in teachers %}
+                            <option
+                                value="{{ teacher.id }}"
+                                {% if teacher.id == lesson.teacher_id %}selected{% endif %}
+                            >
+                                {{ teacher.full_name }} — {{ teacher.email }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="topic">Тема занятия</label>
+                    <input
+                        type="text"
+                        id="topic"
+                        name="topic"
+                        value="{{ lesson.topic or '' }}"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="group_id">Группа</label>
+                    <select id="group_id" name="group_id" required>
+                        {% for group in groups %}
+                            <option
+                                value="{{ group.id }}"
+                                {% if group.id == lesson.group_id %}selected{% endif %}
+                            >
+                                {{ group.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    Сохранить изменения
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

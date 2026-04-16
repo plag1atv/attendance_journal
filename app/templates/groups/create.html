@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Создать группу{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1>Создание группы</h1>
+
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="name">Название группы</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Например, ИКБО-15-24"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="course">Курс</label>
+                    <input
+                        type="number"
+                        id="course"
+                        name="course"
+                        placeholder="Например, 2"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Описание</label>
+                    <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        placeholder="Необязательно"
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    Сохранить группу
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

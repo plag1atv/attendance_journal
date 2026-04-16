@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1>Вход</h1>
+
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Почта</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Введите почту"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Введите пароль"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    Войти
+                </button>
+            </form>
+
+            <p class="auth-note">
+                Доступ в систему выдает администратор.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить студента{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1>Добавление студента</h1>
+
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="full_name">ФИО студента</label>
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        placeholder="Введите ФИО"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Почта</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Необязательно"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        placeholder="Необязательно"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="group_id">Группа</label>
+                    <select id="group_id" name="group_id" required>
+                        <option value="">Выберите группу</option>
+                        {% for group in groups %}
+                            <option value="{{ group.id }}">{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    Сохранить студента
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

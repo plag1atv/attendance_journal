@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Группы{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="page-header">
+            <h1>Учебные группы</h1>
+
+            <div class="header-actions">
+                {% if current_user.role == "admin" %}
+                    <a href="{{ url_for('groups.create_group') }}" class="btn btn-primary">
+                        Создать группу
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if groups %}
+            <div class="table-card">
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Курс</th>
+                                <th>Описание</th>
+                                {% if current_user.role == "admin" %}
+                                    <th>Действия</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for group in groups %}
+                                <tr>
+                                    <td>{{ group.id }}</td>
+                                    <td>{{ group.name }}</td>
+                                    <td>{{ group.course }}</td>
+                                    <td>{{ group.description or "—" }}</td>
+
+                                    {% if current_user.role == "admin" %}
+                                        <td>
+                                            <div class="table-actions">
+                                                <a
+                                                    href="{{ url_for('groups.edit_group', group_id=group.id) }}"
+                                                    class="btn btn-secondary btn-small"
+                                                >
+                                                    Редактировать
+                                                </a>
+
+                                                <form
+                                                    method="POST"
+                                                    action="{{ url_for('groups.delete_group', group_id=group.id) }}"
+                                                    onsubmit="return confirm('Удалить группу?');"
+                                                >
+                                                    <button type="submit" class="btn btn-danger btn-small">
+                                                        Удалить
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-card">
+                <p>Пока нет ни одной группы.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

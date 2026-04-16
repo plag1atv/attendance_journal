@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <div class="dashboard-card reveal">
+            <h1>Личный кабинет</h1>
+            <p><strong>ФИО:</strong> {{ current_user.full_name }}</p>
+            <p><strong>Почта:</strong> {{ current_user.email }}</p>
+            <p><strong>Роль:</strong> {{ current_user.role }}</p>
+            <p><strong>Группа:</strong> {{ current_user.group.name if current_user.group else "Не назначена" }}</p>
+
+            <div class="dashboard-actions">
+                <a href="{{ url_for('groups.list_groups') }}" class="btn btn-primary">
+                    Группы
+                </a>
+                <a href="{{ url_for('students.list_students') }}" class="btn btn-secondary">
+                    Студенты
+                </a>
+                <a href="{{ url_for('lessons.list_lessons') }}" class="btn btn-primary">
+                    Занятия
+                </a>
+                <a href="{{ url_for('summary.attendance_summary') }}" class="btn btn-secondary">
+                    Сводный журнал
+                </a>
+                <a href="{{ url_for('reports.statistics') }}" class="btn btn-primary">
+                    Статистика
+                </a>
+
+                {% if current_user.role == "admin" %}
+                    <a href="{{ url_for('users.list_users') }}" class="btn btn-secondary">
+                        Пользователи
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

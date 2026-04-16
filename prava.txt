@@ -1,0 +1,2 @@
+почта: admin@attendance.local
+пароль: admin12345

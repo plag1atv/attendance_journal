@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Студенты{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="page-header">
+            <h1>Список студентов</h1>
+        </div>
+
+        <div class="table-card" style="margin-bottom: 24px;">
+            <form method="GET" class="filter-form">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="group_id">Просмотр группы</label>
+                        <select id="group_id" name="group_id">
+                            <option value="">Все группы</option>
+                            {% for group in groups %}
+                                <option
+                                    value="{{ group.id }}"
+                                    {% if selected_group_id == group.id|string %}selected{% endif %}
+                                >
+                                    {{ group.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-secondary">
+                            Показать
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if students %}
+            <div class="table-card">
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ФИО</th>
+                                <th>Почта</th>
+                                <th>Телефон</th>
+                                <th>Группа</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr>
+                                    <td>{{ student.id }}</td>
+                                    <td>{{ student.full_name }}</td>
+                                    <td>{{ student.email or "—" }}</td>
+                                    <td>{{ student.phone or "—" }}</td>
+                                    <td>{{ student.group.name }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-card">
+                <p>Студенты не найдены.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

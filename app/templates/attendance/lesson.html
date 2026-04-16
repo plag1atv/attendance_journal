@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Посещаемость{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1>Журнал посещаемости</h1>
+                <p class="page-subtitle">
+                    {{ lesson.subject }} · {{ lesson.lesson_date }} · {{ lesson.group.name }}
+                </p>
+            </div>
+            <a href="{{ url_for('lessons.list_lessons') }}" class="btn btn-secondary">
+                Назад
+            </a>
+        </div>
+
+        {% if students %}
+            <div class="table-card">
+                <form method="POST">
+                    <div class="table-scroll">
+                        <table class="data-table attendance-table">
+                            <thead>
+                                <tr>
+                                    <th>Студент</th>
+                                    <th>Статус</th>
+                                    <th>Комментарий</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                    {% set record = records_map.get(student.id) %}
+                                    <tr>
+                                        <td>{{ student.full_name }}</td>
+                                        <td>
+                                            {% if can_edit %}
+                                                <select name="status_{{ student.id }}" class="status-select">
+                                                    <option value="present" {% if record and record.status == "present" %}selected{% endif %}>
+                                                        Присутствовал
+                                                    </option>
+                                                    <option value="absent" {% if record and record.status == "absent" %}selected{% endif %}>
+                                                        Отсутствовал
+                                                    </option>
+                                                    <option value="late" {% if record and record.status == "late" %}selected{% endif %}>
+                                                        Опоздал
+                                                    </option>
+                                                    <option value="excused" {% if record and record.status == "excused" %}selected{% endif %}>
+                                                        Уважительная причина
+                                                    </option>
+                                                </select>
+                                            {% else %}
+                                                <span class="status-pill status-{{ record.status if record else 'empty' }}">
+                                                    {% if record %}
+                                                        {% if record.status == "present" %}
+                                                            Присутствовал
+                                                        {% elif record.status == "absent" %}
+                                                            Отсутствовал
+                                                        {% elif record.status == "late" %}
+                                                            Опоздал
+                                                        {% elif record.status == "excused" %}
+                                                            Уважительная причина
+                                                        {% endif %}
+                                                    {% else %}
+                                                        Нет отметки
+                                                    {% endif %}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if can_edit %}
+                                                <input
+                                                    type="text"
+                                                    name="comment_{{ student.id }}"
+                                                    value="{{ record.comment if record and record.comment else '' }}"
+                                                    placeholder="Комментарий"
+                                                >
+                                            {% else %}
+                                                {{ record.comment if record and record.comment else "—" }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if can_edit %}
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                Сохранить посещаемость
+                            </button>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        {% else %}
+            <div class="empty-card">
+                <p>В этой группе пока нет студентов.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

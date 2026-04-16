@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Создать занятие{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1>Создание занятия</h1>
+
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="lesson_date">Дата</label>
+                    <input
+                        type="date"
+                        id="lesson_date"
+                        name="lesson_date"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Предмет</label>
+                    <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        placeholder="Например, Фронтенд-разработка"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="lesson_number">Пара</label>
+                    <input
+                        type="text"
+                        id="lesson_number"
+                        name="lesson_number"
+                        placeholder="Например, 1 пара"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="teacher_id">Преподаватель</label>
+                    <select id="teacher_id" name="teacher_id" required>
+                        <option value="">Выберите преподавателя</option>
+                        {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}">
+                                {{ teacher.full_name }} — {{ teacher.email }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="topic">Тема занятия</label>
+                    <input
+                        type="text"
+                        id="topic"
+                        name="topic"
+                        placeholder="Необязательно"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="group_id">Группа</label>
+                    <select id="group_id" name="group_id" required>
+                        <option value="">Выберите группу</option>
+                        {% for group in groups %}
+                            <option value="{{ group.id }}">{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    Сохранить занятие
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

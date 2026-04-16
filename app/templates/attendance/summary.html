@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Сводный журнал{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="page-header">
+            <h1>Сводный журнал посещаемости</h1>
+        </div>
+
+        <div class="table-card" style="margin-bottom: 24px;">
+            <form method="GET" class="filter-form">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="group_id">Выберите группу</label>
+                        <select id="group_id" name="group_id">
+                            <option value="">Выберите группу</option>
+                            {% for group in groups %}
+                                <option
+                                    value="{{ group.id }}"
+                                    {% if selected_group and selected_group.id == group.id %}selected{% endif %}
+                                >
+                                    {{ group.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">
+                            Показать
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if selected_group %}
+            {% if lessons and students %}
+                <div class="table-card">
+                    <div class="table-scroll">
+                        <table class="data-table summary-table">
+                            <thead>
+                                <tr>
+                                    <th>Студент</th>
+                                    {% for lesson in lessons %}
+                                        <th>
+                                            {{ lesson.lesson_date }}<br>
+                                            {{ lesson.subject }}
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                    <tr>
+                                        <td>{{ student.full_name }}</td>
+                                        {% for lesson in lessons %}
+                                            {% set status = attendance_map.get((student.id, lesson.id), "—") %}
+                                            <td>
+                                                {% if status == "present" %}
+                                                    П
+                                                {% elif status == "absent" %}
+                                                    Н
+                                                {% elif status == "late" %}
+                                                    О
+                                                {% elif status == "excused" %}
+                                                    У
+                                                {% else %}
+                                                    —
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="legend-card">
+                    <p><strong>Условные обозначения:</strong></p>
+                    <p>П — присутствовал</p>
+                    <p>Н — отсутствовал</p>
+                    <p>О — опоздал</p>
+                    <p>У — уважительная причина</p>
+                </div>
+            {% else %}
+                <div class="empty-card">
+                    <p>Для выбранной группы пока нет занятий или студентов.</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-card">
+                <p>Сначала выбери группу, чтобы посмотреть сводный журнал.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
