@@ -35,6 +35,44 @@
                         </select>
                     </div>
 
+                    {% if current_user.role == "admin" %}
+                        <div class="form-group">
+                            <label for="teacher_id">Преподаватель</label>
+                            <select id="teacher_id" name="teacher_id">
+                                <option value="">Все преподаватели</option>
+                                {% for teacher in teachers %}
+                                    <option
+                                        value="{{ teacher.id }}"
+                                        {% if selected_teacher_id == teacher.id|string %}selected{% endif %}
+                                    >
+                                        {{ teacher.full_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="subject">Предмет</label>
+                        <input
+                            type="text"
+                            id="subject"
+                            name="subject"
+                            value="{{ subject }}"
+                            placeholder="Поиск по предмету"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lesson_date">Дата</label>
+                        <input
+                            type="date"
+                            id="lesson_date"
+                            name="lesson_date"
+                            value="{{ lesson_date }}"
+                        >
+                    </div>
+
                     <div class="filter-actions">
                         <button type="submit" class="btn btn-secondary">
                             Показать

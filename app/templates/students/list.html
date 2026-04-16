@@ -13,7 +13,7 @@
             <form method="GET" class="filter-form">
                 <div class="filter-row">
                     <div class="form-group">
-                        <label for="group_id">Просмотр группы</label>
+                        <label for="group_id">Группа</label>
                         <select id="group_id" name="group_id">
                             <option value="">Все группы</option>
                             {% for group in groups %}
@@ -25,6 +25,17 @@
                                 </option>
                             {% endfor %}
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="search">Поиск</label>
+                        <input
+                            type="text"
+                            id="search"
+                            name="search"
+                            value="{{ search }}"
+                            placeholder="ФИО, почта или телефон"
+                        >
                     </div>
 
                     <div class="filter-actions">

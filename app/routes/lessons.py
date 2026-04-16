@@ -13,10 +13,16 @@ lessons = Blueprint("lessons", __name__, url_prefix="/lessons")
 @login_required
 def list_lessons():
     selected_group_id = request.args.get("group_id", "").strip()
+    subject = request.args.get("subject", "").strip().lower()
+    lesson_date = request.args.get("lesson_date", "").strip()
+    teacher_id = request.args.get("teacher_id", "").strip()
+
+    teachers = User.query.filter_by(role="teacher").order_by(User.full_name.asc()).all()
 
     if current_user.role == "teacher":
         available_groups = Group.query.order_by(Group.name.asc()).all()
         lessons_query = Lesson.query.filter_by(teacher_id=current_user.id)
+        teacher_id = str(current_user.id)
     elif current_user.role == "student" and current_user.group_id:
         available_groups = Group.query.filter_by(id=current_user.group_id).all()
         lessons_query = Lesson.query.filter_by(group_id=current_user.group_id)
@@ -25,23 +31,44 @@ def list_lessons():
         available_groups = Group.query.order_by(Group.name.asc()).all()
         lessons_query = Lesson.query
 
-    if current_user.role == "admin" and selected_group_id:
-        try:
-            selected_group_id = int(selected_group_id)
-            lessons_query = lessons_query.filter_by(group_id=selected_group_id)
-        except ValueError:
-            selected_group_id = ""
+        if selected_group_id:
+            try:
+                lessons_query = lessons_query.filter_by(group_id=int(selected_group_id))
+            except ValueError:
+                selected_group_id = ""
+
+        if teacher_id:
+            try:
+                lessons_query = lessons_query.filter_by(teacher_id=int(teacher_id))
+            except ValueError:
+                teacher_id = ""
 
     all_lessons = lessons_query.order_by(
         Lesson.lesson_date.desc(),
         Lesson.subject.asc(),
     ).all()
 
+    if subject:
+        all_lessons = [
+            lesson for lesson in all_lessons
+            if subject in lesson.subject.lower()
+        ]
+
+    if lesson_date:
+        all_lessons = [
+            lesson for lesson in all_lessons
+            if lesson.lesson_date == lesson_date
+        ]
+
     return render_template(
         "lessons/list.html",
         lessons=all_lessons,
         groups=available_groups,
+        teachers=teachers,
         selected_group_id=str(selected_group_id) if selected_group_id else "",
+        selected_teacher_id=str(teacher_id) if teacher_id else "",
+        subject=subject,
+        lesson_date=lesson_date,
     )
 
 
@@ -50,7 +77,7 @@ def list_lessons():
 @role_required("admin")
 def create_lesson():
     all_groups = Group.query.order_by(Group.name.asc()).all()
-    teachers = User.query.filter_by(role="teacher").order_by(User.email.asc()).all()
+    teachers = User.query.filter_by(role="teacher").order_by(User.full_name.asc()).all()
 
     if not all_groups:
         flash("Сначала создайте хотя бы одну группу.", "error")
@@ -136,7 +163,7 @@ def create_lesson():
 def edit_lesson(lesson_id):
     lesson = Lesson.query.get_or_404(lesson_id)
     all_groups = Group.query.order_by(Group.name.asc()).all()
-    teachers = User.query.filter_by(role="teacher").order_by(User.email.asc()).all()
+    teachers = User.query.filter_by(role="teacher").order_by(User.full_name.asc()).all()
 
     if request.method == "POST":
         lesson_date = request.form.get("lesson_date", "").strip()

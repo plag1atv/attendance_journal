@@ -5,6 +5,7 @@ from config import Config
 from app.extensions import db, login_manager
 
 
+
 def create_default_admin():
     from app.models import User
 
@@ -30,6 +31,7 @@ def create_app():
     login_manager.init_app(app)
 
     from app import models
+    from app.routes.api import api
     from app.routes.attendance import attendance
     from app.routes.auth import auth
     from app.routes.groups import groups
@@ -49,6 +51,7 @@ def create_app():
     app.register_blueprint(reports)
     app.register_blueprint(summary)
     app.register_blueprint(users)
+    app.register_blueprint(api)
 
     with app.app_context():
         db.create_all()

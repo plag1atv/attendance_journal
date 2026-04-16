@@ -11,6 +11,7 @@ students = Blueprint("students", __name__, url_prefix="/students")
 @login_required
 def list_students():
     selected_group_id = request.args.get("group_id", "").strip()
+    search = request.args.get("search", "").strip().lower()
 
     if current_user.role in ("student", "teacher") and current_user.group_id:
         available_groups = Group.query.filter_by(id=current_user.group_id).all()
@@ -29,9 +30,18 @@ def list_students():
 
     all_students = students_query.order_by(Student.full_name.asc()).all()
 
+    if search:
+        all_students = [
+            student for student in all_students
+            if search in student.full_name.lower()
+            or (student.email and search in student.email.lower())
+            or (student.phone and search in student.phone.lower())
+        ]
+
     return render_template(
         "students/list.html",
         students=all_students,
         groups=available_groups,
         selected_group_id=str(selected_group_id) if selected_group_id else "",
+        search=search,
     )
